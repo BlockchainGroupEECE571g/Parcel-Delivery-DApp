@@ -2,7 +2,6 @@ pragma solidity >=0.4.21 <0.7.0;
 
 contract Express {
     string public expressName;
-    address payable public deployer;
     uint256 public totalNumber = 0;
     uint256 public constant price1 = 3 ether;
     uint256 public constant price2 = 5 ether;
@@ -124,7 +123,6 @@ contract Express {
 
     constructor() public {
         expressName = "Ethereum Express.com";
-        deployer = msg.sender;
     }
 
     //make orders
@@ -200,11 +198,11 @@ contract Express {
             orders2[totalNumber].orderPrice = price3;
         }
         require(
-            msg.value >= orders2[totalNumber].orderPrice,
+            msg.value > orders2[totalNumber].orderPrice,
             "Not enough ether to create order"
         );
         Order2 memory _order2 = orders2[totalNumber];
-        sendEther(deployer, _order2.orderPrice);
+
         emit orderCreated2(
             _order2.orderId,
             _order2.startTime,
@@ -227,7 +225,8 @@ contract Express {
 
 
     //cancel order
-    function cancelOrder(uint256 _orderId) public payable {
+    function cancelOrder(uint256 _orderId) public {
+        Order2 memory _order2 = orders2[_orderId];
         Order3 memory _order3 = orders3[_orderId];
         require(
             msg.sender == _order3.parcelSender,
@@ -244,6 +243,7 @@ contract Express {
         );
         _order3.orderStatus = status5;
         orders3[_orderId] = _order3;
+        _order3.parcelSender.transfer(_order2.orderPrice);
         emit orderCancelled(
             _order3.orderId,
             _order3.parcelSender,
@@ -252,25 +252,6 @@ contract Express {
         );
     }
 
-    function refund(uint256 _orderId) public payable {
-        require(
-            msg.sender == deployer,
-            "Only deployer can refund money to parcelSender"
-        );
-        Order2 memory _order2 = orders2[_orderId];
-        Order3 memory _order3 = orders3[_orderId];
-        require(
-            _order3.orderStatus == status5,
-            "Order should be cancelled"
-        );
-        require(
-            msg.value == _order2.orderPrice - 1,
-            "Not enough refund money!"
-        );
-        sendEther(_order3.parcelSender, _order2.orderPrice - 1);
-
-        emit refundGot(_order3.parcelSender, _order2.orderPrice - 1);
-    }
 
     //Courier takes order
     function takeOrder(uint256 _orderId, uint256 _currentTime) public {
@@ -335,6 +316,7 @@ contract Express {
     }
 
     function confirmOrder(uint256 _orderId) public {
+        Order2 memory _order2 = orders2[_orderId];
         Order3 memory _order3 = orders3[_orderId];
         require(
             _order3.orderStatus == status2,
@@ -353,23 +335,7 @@ contract Express {
             _order3.receiver,
             _order3.orderStatus
         );
-    }
-
-    function payToCourier(uint256 _orderId) public payable {
-        require(
-            msg.sender == deployer,
-            "Only deployer can send money to courier"
-        );
-        Order2 memory _order2 = orders2[_orderId];
-        Order3 memory _order3 = orders3[_orderId];
-        require(
-            _order3.orderStatus == status4,
-            "Order should be confirmed"
-        );
-        require(msg.value >= _order2.orderPrice - 1, "Not enough money!");
-        sendEther(_order3.courier, _order2.orderPrice - 1);
-
-        emit courierGotPaid(_order3.courier, _order2.orderPrice - 1);
+       _order3.courier.transfer(_order2.orderPrice);
     }
 
     function makeGrade(uint256 _orderId, uint256 _grade) public view {
@@ -377,10 +343,6 @@ contract Express {
         require(
             _order3.receiver == msg.sender,
             "Only receiver can confirm order"
-        );
-        require(
-            msg.sender == deployer,
-            "Only deployer can refund money to parcelSender"
         );
         Courier memory _courier = couriers[_order3.courier];
         _courier.totalGradesNum++;
@@ -390,7 +352,4 @@ contract Express {
 
     }
 
-    function sendEther(address payable _address, uint256 value) public payable {
-        _address.transfer(value);
-    }
 }
