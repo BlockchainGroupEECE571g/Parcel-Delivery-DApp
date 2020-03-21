@@ -69,12 +69,11 @@ contract Express {
         string orderType,
         uint256 orderPrice
     );
-
     event orderCreated3(
-        address payable parcelSender,
+          address payable parcelSender,
         address payable receiver,
-        uint256 orderStatus
-    );
+           uint256 orderStatus
+        );
 
     event orderCancelled(
         uint256 orderId,
@@ -83,7 +82,6 @@ contract Express {
         uint256 orderStatus
     );
 
-    event refundGot(address payable parcelSender, uint256 refundMoney);
 
     event orderTaken(
         uint256 orderId,
@@ -110,8 +108,6 @@ contract Express {
         uint256 orderStatus
     );
 
-    event courierGotPaid(address payable courier, uint256 paidMoney);
-
     event orderComplete(
         uint256 orderId,
         address payable parcelSender,
@@ -134,7 +130,6 @@ contract Express {
         string memory _receiverName,
         uint256 _receiverPhone
     ) public {
-        totalNumber = totalNumber + 1;
         require(bytes(_senderName).length > 0, "senderName is required!");
         require(
             _senderPhone > 1000000000 && _senderPhone < 9999999999,
@@ -150,6 +145,7 @@ contract Express {
             _receiverPhone > 1000000000 && _receiverPhone < 1999999999,
             "Please input correct phone number!"
         );
+        totalNumber = totalNumber + 1;
         orders1[totalNumber].orderId = totalNumber;
         orders1[totalNumber].senderName = _senderName;
         orders1[totalNumber].senderPhone = _senderPhone;
@@ -175,7 +171,7 @@ contract Express {
         uint256 _endTime,
         uint256 _orderWeight,
         string memory _orderType,
-        address payable _receiver
+        address  _receiver
     ) public payable {
         require(
             _startTime < _endTime,
@@ -198,11 +194,10 @@ contract Express {
             orders2[totalNumber].orderPrice = price3;
         }
         require(
-            msg.value > orders2[totalNumber].orderPrice,
+            msg.value >= orders2[totalNumber].orderPrice,
             "Not enough ether to create order"
         );
         Order2 memory _order2 = orders2[totalNumber];
-
         emit orderCreated2(
             _order2.orderId,
             _order2.startTime,

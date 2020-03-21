@@ -2,14 +2,14 @@ const Express = artifacts.require("Express");
 require('chai')
     .use(require('chai-as-promised'))
     .should();
- 
+
 contract(Express, ([deployer, parcelSender1, courier1, receiver1, parcelSender2, courier2, receiver2]) => {
     let express;
     before(async() => {
         express = await Express.deployed();
- 
+
     });
- 
+
     describe('Deployment', async() => {
         it('The deployment of express should be done successfully', async() => {
             const address = await express.address;
@@ -22,7 +22,7 @@ contract(Express, ([deployer, parcelSender1, courier1, receiver1, parcelSender2,
             const expressName = await express.expressName();
             assert.equal("Ethereum Express.com", expressName);
         })
- 
+
     });
     describe('Create Order and Cancel Order', async() => {
         let order1, order2, totalNumber
@@ -36,7 +36,7 @@ contract(Express, ([deployer, parcelSender1, courier1, receiver1, parcelSender2,
             await express.createOrder1('Shen Yue', 1, 'Dunbar', 'UBC', 'Zhu Chenchen', 1778889999, { from: parcelSender1 }).should.be.rejected;
             await express.createOrder1('Shen Yue', 2387778888, 'Dunbar', 'UBC', 'Zhu Chenchen', 9999999999, { from: parcelSender1 }).should.be.rejected;
         })
- 
+
         it('Creating order successfully', async() => {
             assert.equal(1, totalNumber);
             const event1 = order1.logs[0].args;
@@ -49,22 +49,22 @@ contract(Express, ([deployer, parcelSender1, courier1, receiver1, parcelSender2,
             assert.equal(receiver1, event3.receiver);
             assert.equal(101, event3.orderStatus, "OrderStatus is waiting to be taken");
         })
- 
+
         it('Cancelling order by wrong parcelSender should be rejected', async() => {
             orderCancel = await express.cancelOrder(1, { from: parcelSender2 }).should.be.rejected;
         })
- 
+
         it('Cancelling order successfully', async() => {
             orderCancel = await express.cancelOrder(1, { from: parcelSender1 });
             const event = orderCancel.logs[0].args;
             assert.equal(105, event.orderStatus);
         })
- 
+
         it('Cannot Take order after the order has been canceled', async() => {
             await express.takeOrder(1, 10, { from: courier1 }).should.be.rejected;
         })
     });
- 
+
     describe('Create order and take order', async() => {
         let order1, order2, totalNumber
         before(async() => {
@@ -72,17 +72,17 @@ contract(Express, ([deployer, parcelSender1, courier1, receiver1, parcelSender2,
             order2 = await express.createOrder2(9, 17, 13, 'Book', receiver1, { from: parcelSender2, value: web3.utils.toWei('5', 'Ether') })
             totalNumber = await express.totalNumber()
         })
- 
+
         it('Taking wrong order id should be rejected', async() => {
             await express.takeOrder(7, 10, { from: courier2 }).should.be.rejected;
         })
- 
- 
+
+
         it('Cannot take order if the current time exceeds', async() => {
             await express.takeOrder(2, 18, { from: courier2 }).should.be.rejected;
         })
- 
- 
+
+
         it('Taking order successfully', async() => {
             const event = order1.logs[0].args;
             takeOrder = await express.takeOrder(event.orderId, 10, { from: courier2 });
@@ -93,12 +93,11 @@ contract(Express, ([deployer, parcelSender1, courier1, receiver1, parcelSender2,
             const event3 = takeOrder.logs[1].args;
             assert.equal(1, event3.curOrdersNum, 'curOrdersNum should be 1');
         })
- 
+
         it('Cannot cancel order after taking it', async() => {
             await express.cancelOrder(2, { from: parcelSender2 }).should.be.rejected;
         })
- 
-    });
- 
-});
 
+    });
+
+});

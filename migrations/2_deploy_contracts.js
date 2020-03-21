@@ -1,5 +1,5 @@
-const Flightbooking = artifacts.require("express");
+const Express = artifacts.require("Express");
 
 module.exports = function(deployer) {
-  deployer.deploy(Flightbooking);
+  deployer.deploy(Express);
 };
