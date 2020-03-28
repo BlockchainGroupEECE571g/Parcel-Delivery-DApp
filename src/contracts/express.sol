@@ -35,7 +35,7 @@ contract Express {
         uint256 orderId;
         address payable parcelSender;
         address payable courier;
-        address payable receiver;
+        address receiver;
         uint256 orderStatus;
     }
 
@@ -71,14 +71,14 @@ contract Express {
     );
     event orderCreated3(
           address payable parcelSender,
-        address payable receiver,
+          address receiver,
            uint256 orderStatus
         );
 
     event orderCancelled(
         uint256 orderId,
         address payable parcelSender,
-        address payable receiver,
+        address receiver,
         uint256 orderStatus
     );
 
@@ -93,7 +93,8 @@ contract Express {
 
     event orderDelivered(
         uint256 orderId,
-        address payable receiver,
+        address courier,
+        address receiver,
         uint256 orderStatus,
         uint256 currentTime
     );
@@ -104,7 +105,7 @@ contract Express {
         uint256 orderId,
         address payable parcelSender,
         address payable courier,
-        address payable receiver,
+        address receiver,
         uint256 orderStatus
     );
 
@@ -112,7 +113,7 @@ contract Express {
         uint256 orderId,
         address payable parcelSender,
         address payable courier,
-        address payable receiver,
+        address receiver,
         uint256 orderStatus,
         uint256 grade
     );
@@ -171,7 +172,7 @@ contract Express {
         uint256 _endTime,
         uint256 _orderWeight,
         string memory _orderType,
-        address  _receiver
+        address _receiver
     ) public payable {
         require(
             _startTime < _endTime,
@@ -283,6 +284,10 @@ contract Express {
     }
 
     function deliverOrder(uint256 _orderId, uint256 _currentTime) public {
+        require(
+            _orderId <= totalNumber,
+            "OrderId is non-existed"
+        );
         Order1 memory _order1 = orders1[_orderId];
         Order3 memory _order3 = orders3[_orderId];
         for (
@@ -300,6 +305,7 @@ contract Express {
         couriers[msg.sender].curOrdersNum--;
         emit orderDelivered(
             _order1.orderId,
+            msg.sender,
             _order3.receiver,
             _order3.orderStatus,
             _currentTime
@@ -311,17 +317,21 @@ contract Express {
     }
 
     function confirmOrder(uint256 _orderId) public {
+        require(
+            _orderId <= totalNumber,
+            "OrderId is non-existed"
+        );
         Order2 memory _order2 = orders2[_orderId];
         Order3 memory _order3 = orders3[_orderId];
         require(
-            _order3.orderStatus == status2,
+            _order3.orderStatus == status3,
             "Order should be waiting for a confirmation"
         );
         require(
             _order3.receiver == msg.sender,
             "Only receiver can confirm order"
         );
-        _order3.orderStatus = status3;
+        _order3.orderStatus = status4;
         orders3[_orderId] = _order3;
         emit orderConfirmed(
             _order3.orderId,
