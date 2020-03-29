@@ -52,3 +52,266 @@ img.logoimg {
     border-radius: 50px;
     opacity: 0.85;
 }
+
+.mybody {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1500px;
+    background: #F7F7F7;
+    padding: 25px 15px 25px 10px;
+    font: 20px Georgia, "Times New Roman", Times, serif;
+    text-shadow: 1px 1px 1px #FFF;
+    border: 1px solid #E4E4E4;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 23px;
+    margin-right: 6px;
+    margin-top: 2px;
+}
+
+img.logoimg2 {
+    width: 100px;
+    height: 100px;
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+img.logoimg3 {
+    width: 100px;
+    height: 130px;
+    opacity: 0.9;
+}
+
+img.logoimg4 {
+    width: 100px;
+    height: 100px;
+    opacity: 0.9;
+}
+
+img.logoimg5 {
+    width: 120px;
+    height: 90px;
+    opacity: 0.9;
+}
+
+.orderH {
+    font-size: 40px;
+    color: #0066FF;
+    font-style: italic;
+    font-weight: bold;
+    border-bottom: 1px solid rgb(219, 211, 211);
+}
+
+.inputdiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 23px;
+    margin-right: 6px;
+    margin-top: 2px;
+}
+
+.inputdiv2 {
+    display: flex;
+    margin: 0px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 23px;
+    margin-right: 6px;
+    margin-top: 2px;
+}
+
+.mybody span {
+    width: 200px;
+    font-size: 20px;
+    color: rgb(99, 96, 96);
+}
+
+.inputdiv input {
+    border: 1px solid #DADADA;
+    color: #888;
+    height: 40px;
+    outline: 0 none;
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 3px 3px 3px 5px;
+    width: 50%;
+    font-size: 24px;
+    line-height: 15px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+}
+
+.inputdiv2 input {
+    border: 1px solid #DADADA;
+    color: #888;
+    height: 40px;
+    outline: 0 none;
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 3px 3px 3px 5px;
+    width: 100%;
+    font-size: 24px;
+    line-height: 15px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+}
+
+.submitButton {
+    background: #E27575;
+    border: none;
+    padding: 10px 25px 10px 25px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+button:hover {
+    background: #CF7A7A
+}
+
+.orderPriceH {
+    width: 300px;
+    font-size: 25px;
+    margin-bottom: 30px;
+    border: 2px solid rgb(85, 65, 65);
+    color: #776f6f;
+}
+
+.inputdiv select {
+    text-indent: 0.01px;
+    text-overflow: '';
+    height: 40px;
+    outline: 0 none;
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 3px 3px 3px 5px;
+    width: 50%;
+    font-size: 24px;
+    line-height: 15px;
+    height: 35px;
+    line-height: 25px;
+    color: #888;
+}
+
+.dialog-container {
+    width: 600px;
+    background: #C8C8C8;
+    opacity: 0.8;
+    border-radius: 8px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    font: 20px Georgia, "Times New Roman", Times, serif;
+}
+
+.dialog-header {
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+}
+
+.dialog-body {
+    line-height: 1.9;
+    margin-top: 30px;
+    margin-left: 20px;
+}
+
+.dialog-footer {
+    margin-top: 20px;
+}
+
+.dialog-footer button {
+    margin: 0 220px;
+    background: rgb(11, 21, 36);
+    border: none;
+    padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+.orderRecordsH {
+    font-size: 40px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #686868;
+    color: #686868;
+    font-style: italic;
+}
+
+td .cancelButton {
+    background: rgb(62, 120, 196);
+    border: none;
+    padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+td .showInfoButton {
+    background: rgb(11, 21, 36);
+    border: none;
+    padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+td .takeButton {
+    background: rgb(197, 186, 31);
+    border: none;
+    padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+td .deliverButton {
+    background: rgb(123, 101, 202);
+    border: none;
+    padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+.table1 {
+    height: 600px;
+}
+
+th {
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+.showScore {
+    text-align: center;
+}
+
+.showScore span {
+    font-size: 25px;
+    margin: 30px
+}

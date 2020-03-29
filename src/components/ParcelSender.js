@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import Addressbar from './Addressbar'
 import Express from '../abis/Express'
 import Web3 from 'web3'
+import './App.css'
+import logo from '../images/logo.png'
+import Dialog from './Dialog'
+import parcelSenderImg from '../images/parcelSender.jpg'
 
 class ParcelSender extends Component {
   state = {
@@ -20,7 +24,11 @@ class ParcelSender extends Component {
       104: 'Completed',
       105: 'Cancelled',
     },
+    loading2: false,
+    dialog: false,
+    message: [],
   }
+
   async componentDidMount() {
     await this.getWeb3Provider()
     await this.connectToBlockchain()
@@ -69,59 +77,100 @@ class ParcelSender extends Component {
     }
   }
 
-  createOrder1 = async (
+  createOrder = async (
     _senderName,
     _senderPhone,
     _pickupAddr,
     _shippingAddr,
     _receiverName,
     _receiverPhone,
-  ) => {
-    this.setState({ loading: true })
-    const gasAmount = await this.state.deployedExpress.methods
-      .createOrder1(
-        _senderName,
-        _senderPhone,
-        _pickupAddr,
-        _shippingAddr,
-        _receiverName,
-        _receiverPhone,
-      )
-      .estimateGas({ from: this.state.account })
-    this.state.deployedExpress.methods
-      .createOrder1(
-        _senderName,
-        _senderPhone,
-        _pickupAddr,
-        _shippingAddr,
-        _receiverName,
-        _receiverPhone,
-      )
-      .send({ from: this.state.account, gas: gasAmount })
-      .once('receipt', receipt => {
-        this.setState({ loading: false })
-      })
-  }
-
-  createOrder2 = async (
+    _receiver,
     _startTime,
     _endTime,
     _orderWeight,
     _orderType,
-    _receiver,
     _orderPrice,
   ) => {
     this.setState({ loading: true })
     const gasAmount = await this.state.deployedExpress.methods
-      .createOrder2(_startTime, _endTime, _orderWeight, _orderType, _receiver)
+      .createOrder(
+        _senderName,
+        _senderPhone,
+        _pickupAddr,
+        _shippingAddr,
+        _receiverName,
+        _receiverPhone,
+        _receiver,
+        _startTime,
+        _endTime,
+        _orderWeight,
+        _orderType,
+      )
       .estimateGas({ from: this.state.account, value: _orderPrice })
     this.state.deployedExpress.methods
-      .createOrder2(_startTime, _endTime, _orderWeight, _orderType, _receiver)
+      .createOrder(
+        _senderName,
+        _senderPhone,
+        _pickupAddr,
+        _shippingAddr,
+        _receiverName,
+        _receiverPhone,
+        _receiver,
+        _startTime,
+        _endTime,
+        _orderWeight,
+        _orderType,
+      )
       .send({ from: this.state.account, value: _orderPrice, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
       })
   }
+
+  //open the dialog
+  showInfo = async (
+    senderName,
+    senderPhone,
+    pickupAddr,
+    receiverName,
+    receiverPhone,
+    shippingAddr,
+    receiver,
+    startTime,
+    endTime,
+    orderWeight,
+    orderType,
+  ) => {
+    this.setState({
+      loading2: true,
+    })
+
+    this.setState({
+      dialog: true,
+      message: [
+        senderName,
+        senderPhone,
+        pickupAddr,
+        receiverName,
+        receiverPhone,
+        shippingAddr,
+        receiver,
+        startTime,
+        endTime,
+        orderWeight,
+        orderType,
+      ],
+      loading2: false,
+    })
+  }
+
+  //close the dialog
+  closeDialog = () => {
+    this.setState({
+      dialog: false,
+    })
+  }
+
   cancelOrder = async _orderId => {
     this.setState({ loading: true })
     const gasAmount = await this.state.deployedExpress.methods
@@ -134,14 +183,29 @@ class ParcelSender extends Component {
         this.setState({ loading: false })
       })
   }
+  Home = () => {
+    this.props.history.push({ pathname: '/' })
+  }
 
   render() {
     return (
       <div>
         <Addressbar account={this.state.account} />{' '}
         <div className="container-fluid mt-5">
-          <div id="createOrder">
-            <h2> You Can Create Your Order Now! </h2>{' '}
+          <div className="mybody">
+            <div className="title">
+              <img
+                onClick={this.Home.bind(this)}
+                src={logo}
+                className="logoimg2"
+              ></img>
+           
+          <img
+            src={parcelSenderImg}
+            className="logoimg3"
+          ></img>
+              <h2 className="orderH"> You Can Create Your Order Now! </h2>
+            </div>
             <form
               onSubmit={async event => {
                 event.preventDefault()
@@ -151,6 +215,7 @@ class ParcelSender extends Component {
                 const shippingAddr = this.shippingAddr.value
                 const receiverName = this.receiverName.value
                 const receiverPhone = this.receiverPhone.value
+                const receiverAddr = this.receiverAddr.value
                 const startTime = this.state.startTime
                 const endTime = this.state.endTime
                 const orderWeight = this.state.orderWeight
@@ -159,40 +224,24 @@ class ParcelSender extends Component {
                   this.state.orderPrice.toString(),
                   'Ether',
                 )
-                const receiverAddr = this.receiverAddr.value
-                // const senderName = "2";
-                // const senderPhone = "1234554321";
-                // const pickupAddr = "pickupAddr";
-                // const shippingAddr = "shippingAddr";
-                // const receiverName = "receiverName";
-                // const receiverPhone = "1234554321";
-                // const startTime = "1"
-                // const endTime =  "4"
-                // const orderWeight =  "3"
-                // const orderType = "food"
-                // console.log(this.state.gasFee);
-                //const orderPrice = window.web3.utils.toWei("8", 'Ether');
-                // const receiverAddr = "0x069C94e14a46DCE136f9FE8C366d4753136Da217"
-
-                await this.createOrder2(
-                  startTime,
-                  endTime,
-                  orderWeight,
-                  orderType,
-                  receiverAddr,
-                  orderPrice,
-                )
-                await this.createOrder1(
+                await this.createOrder(
                   senderName,
                   senderPhone,
                   pickupAddr,
                   shippingAddr,
                   receiverName,
                   receiverPhone,
+                  receiverAddr,
+                  startTime,
+                  endTime,
+                  orderWeight,
+                  orderType,
+                  orderPrice,
                 )
               }}
             >
-              <div className="form-group mr-sm-2">
+              <div className="inputdiv">
+                <span>Your Name: </span>
                 <input
                   id="senderName"
                   type="text"
@@ -200,11 +249,11 @@ class ParcelSender extends Component {
                     this.senderName = input
                   }}
                   className="form-control"
-                  placeholder="Sender Name"
+                  placeholder=""
                   required
                 />
-              </div>
-              <div className="form-group mr-sm-2">
+
+                <span> Your Phone Number: </span>
                 <input
                   id="senderPhone"
                   type="Number"
@@ -212,11 +261,12 @@ class ParcelSender extends Component {
                     this.senderPhone = input
                   }}
                   className="form-control"
-                  placeholder="Sender Phone"
+                  placeholder=""
                   required
                 />
-              </div>{' '}
-              <div className="form-group mr-sm-2">
+              </div>
+              <div className="inputdiv2">
+                <span> Pickup Address: </span>
                 <input
                   id="pickupAddr"
                   type="text"
@@ -224,11 +274,12 @@ class ParcelSender extends Component {
                     this.pickupAddr = input
                   }}
                   className="form-control"
-                  placeholder="Pick Up Address"
+                  placeholder=""
                   required
                 />
-              </div>{' '}
-              <div className="form-group mr-sm-2">
+              </div>
+              <div className="inputdiv2">
+                <span> Shipping Address: </span>
                 <input
                   id="shippingAddr"
                   type="text"
@@ -236,11 +287,12 @@ class ParcelSender extends Component {
                     this.shippingAddr = input
                   }}
                   className="form-control"
-                  placeholder="Shipping Address"
+                  placeholder=""
                   required
                 />
               </div>{' '}
-              <div className="form-group mr-sm-2">
+              <div className="inputdiv">
+                <span> Receiver Name: </span>
                 <input
                   id="receiverName"
                   type="text"
@@ -248,11 +300,10 @@ class ParcelSender extends Component {
                     this.receiverName = input
                   }}
                   className="form-control"
-                  placeholder="Receiver Name"
+                  placeholder=""
                   required
                 />
-              </div>
-              <div className="form-group mr-sm-2">
+                <span> Receiver Phone: </span>
                 <input
                   id="receiverPhone"
                   type="Number"
@@ -260,11 +311,25 @@ class ParcelSender extends Component {
                     this.receiverPhone = input
                   }}
                   className="form-control"
-                  placeholder="Receiver Phone"
+                  placeholder=""
                   required
                 />
               </div>{' '}
-              <div className="form-group mr-sm-2">
+              <div className="inputdiv2">
+                <span> Receiver Hash Address: </span>
+                <input
+                  id="receiverAddr"
+                  type="text"
+                  ref={input => {
+                    this.receiverAddr = input
+                  }}
+                  className="form-control"
+                  placeholder=""
+                  required
+                />
+              </div>{' '}
+              <div className="inputdiv">
+                <span> Pickup Time: </span>
                 <select
                   onChange={e => {
                     this.setState({
@@ -298,6 +363,7 @@ class ParcelSender extends Component {
                   <option value="22"> 10:00 pm </option>{' '}
                   <option value="23"> 11:00 pm </option>{' '}
                 </select>
+                <span> Expected Time: </span>
                 <select
                   onChange={e => {
                     this.setState({
@@ -305,7 +371,9 @@ class ParcelSender extends Component {
                     })
                   }}
                 >
-                  <option value="-1">Please select your expected receive time</option>{' '}
+                  <option value="-1">
+                    Please select your expected receive time
+                  </option>{' '}
                   <option value="0"> 12:00 Midnight</option>{' '}
                   <option value="1"> 01:00 am </option>{' '}
                   <option value="2"> 02:00 am </option>{' '}
@@ -332,7 +400,8 @@ class ParcelSender extends Component {
                   <option value="23"> 11:00 pm </option>{' '}
                 </select>{' '}
               </div>
-              <div className="form-group mr-sm-2">
+              <div className="inputdiv">
+                <span> Order Weight: </span>
                 <select
                   onChange={e => {
                     this.setState({
@@ -361,6 +430,7 @@ class ParcelSender extends Component {
                   <option value="11"> 10 - 20 kg </option>{' '}
                   <option value="21"> 20 - 30 kg </option>{' '}
                 </select>
+                <span> Order Type: </span>
                 <select
                   onChange={e => {
                     this.setState({
@@ -377,28 +447,13 @@ class ParcelSender extends Component {
                   <option value="Others"> Others </option>{' '}
                 </select>{' '}
               </div>{' '}
-              <div className="form-group mr-sm-2">
-                <input
-                  id="receiverAddr"
-                  type="text"
-                  ref={input => {
-                    this.receiverAddr = input
-                  }}
-                  className="form-control"
-                  placeholder="Receiver Hash Address"
-                  required
-                />
-              </div>{' '}
-              <h4>
-                {' '}
-                You Order Price: {this.state.orderPrice}
-                ether{' '}
-              </h4>{' '}
-              <button type="submit" className="btn btn-primary">
+                <h2 className="orderPriceH">Your Order Price: {this.state.orderPrice} ether</h2>
+            
+              <button type="submit" className="submitButton">
                 Create Order{' '}
               </button>{' '}
             </form>{' '}
-            <h2> Your Order Records </h2>{' '}
+            <h2 className="orderRecordsH"> Your Order Records </h2>{' '}
             <table className="table">
               <thead id="orderList">
                 <tr>
@@ -429,6 +484,7 @@ class ParcelSender extends Component {
                         {order.orderStatus == '101' ? (
                           <button
                             name={order.orderId}
+                            className="cancelButton"
                             onClick={async event => {
                               await this.cancelOrder(event.target.name)
                             }}
@@ -437,6 +493,28 @@ class ParcelSender extends Component {
                           </button>
                         ) : null}{' '}
                       </td>{' '}
+                      <td>
+                        <button
+                        className="showInfoButton"
+                          onClick={async event => {
+                            await this.showInfo(
+                              order.senderName,
+                              order.senderPhone,
+                              order.pickupAddr,
+                              order.receiverName,
+                              order.receiverPhone,
+                              order.shippingAddr,
+                              order.receiver,
+                              order.startTime,
+                              order.endTime,
+                              order.orderWeight,
+                              order.orderType,
+                            )
+                          }}
+                        >
+                          showInfo{' '}
+                        </button>
+                      </td>{' '}
                     </tr>
                   )
                 })}{' '}
@@ -444,6 +522,9 @@ class ParcelSender extends Component {
             </table>{' '}
           </div>{' '}
         </div>{' '}
+        {this.state.dialog && (
+          <Dialog message={this.state.message} closeDialog={this.closeDialog} />
+        )}
       </div>
     )
   }

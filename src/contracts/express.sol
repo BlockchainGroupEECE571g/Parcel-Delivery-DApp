@@ -123,14 +123,20 @@ contract Express {
     }
 
     //make orders
-    function createOrder1(
+    function createOrder(
         string memory _senderName,
         uint256 _senderPhone,
         string memory _pickupAddr,
         string memory _shippingAddr,
         string memory _receiverName,
-        uint256 _receiverPhone
-    ) public {
+        uint256 _receiverPhone,
+        address _receiver,
+        uint256 _startTime,
+        uint256 _endTime,
+        uint256 _orderWeight,
+        string memory _orderType
+
+    ) public payable{
         require(bytes(_senderName).length > 0, "senderName is required!");
         require(
             _senderPhone > 1000000000 && _senderPhone < 9999999999,
@@ -146,34 +152,6 @@ contract Express {
             _receiverPhone > 1000000000 && _receiverPhone < 1999999999,
             "Please input correct phone number!"
         );
-        totalNumber = totalNumber + 1;
-        orders1[totalNumber].orderId = totalNumber;
-        orders1[totalNumber].senderName = _senderName;
-        orders1[totalNumber].senderPhone = _senderPhone;
-        orders1[totalNumber].pickupAddr = _pickupAddr;
-        orders1[totalNumber].shippingAddr = _shippingAddr;
-        orders1[totalNumber].receiverName = _receiverName;
-        orders1[totalNumber].receiverPhone = _receiverPhone;
-        Order1 memory _order1 = orders1[totalNumber];
-        emit orderCreated1(
-            _order1.orderId,
-            _order1.senderName,
-            _order1.senderPhone,
-            _order1.pickupAddr,
-            _order1.shippingAddr,
-            _order1.receiverName,
-            _order1.receiverPhone
-        );
-    }
-
-    //make orders
-    function createOrder2(
-        uint256 _startTime,
-        uint256 _endTime,
-        uint256 _orderWeight,
-        string memory _orderType,
-        address _receiver
-    ) public payable {
         require(
             _startTime < _endTime,
             "start time should be smaller than end time!"
@@ -182,12 +160,9 @@ contract Express {
             _orderWeight > 0 && _orderWeight <= 50,
             "order weight should be within the range"
         );
-        orders2[totalNumber].orderId = totalNumber;
-        orders2[totalNumber].startTime = _startTime;
-        orders2[totalNumber].endTime = _endTime;
-        orders2[totalNumber].orderWeight = _orderWeight;
-        orders2[totalNumber].orderType = _orderType;
-        if (_orderWeight > 0 && _orderWeight <= 10) {
+        
+        totalNumber = totalNumber + 1;
+         if (_orderWeight > 0 && _orderWeight <= 10) {
             orders2[totalNumber].orderPrice = price1;
         } else if (_orderWeight > 10 && _orderWeight <= 30) {
             orders2[totalNumber].orderPrice = price2;
@@ -198,6 +173,34 @@ contract Express {
             msg.value >= orders2[totalNumber].orderPrice,
             "Not enough ether to create order"
         );
+        orders1[totalNumber].orderId = totalNumber;
+        orders1[totalNumber].senderName = _senderName;
+        orders1[totalNumber].senderPhone = _senderPhone;
+        orders1[totalNumber].pickupAddr = _pickupAddr;
+        orders1[totalNumber].shippingAddr = _shippingAddr;
+        orders1[totalNumber].receiverName = _receiverName;
+        orders1[totalNumber].receiverPhone = _receiverPhone;
+        orders2[totalNumber].orderId = totalNumber;
+        orders2[totalNumber].startTime = _startTime;
+        orders2[totalNumber].endTime = _endTime;
+        orders2[totalNumber].orderWeight = _orderWeight;
+        orders2[totalNumber].orderType = _orderType;
+
+         orders3[totalNumber].orderId = totalNumber;
+        orders3[totalNumber].parcelSender = msg.sender;
+        orders3[totalNumber].receiver = _receiver;
+        orders3[totalNumber].orderStatus = status1;
+
+        Order1 memory _order1 = orders1[totalNumber];
+        emit orderCreated1(
+            _order1.orderId,
+            _order1.senderName,
+            _order1.senderPhone,
+            _order1.pickupAddr,
+            _order1.shippingAddr,
+            _order1.receiverName,
+            _order1.receiverPhone
+        );
         Order2 memory _order2 = orders2[totalNumber];
         emit orderCreated2(
             _order2.orderId,
@@ -207,10 +210,7 @@ contract Express {
             _order2.orderType,
             _order2.orderPrice
         );
-        orders3[totalNumber].orderId = totalNumber;
-        orders3[totalNumber].parcelSender = msg.sender;
-        orders3[totalNumber].receiver = _receiver;
-        orders3[totalNumber].orderStatus = status1;
+
         Order3 memory _order3 = orders3[totalNumber];
         emit orderCreated3(
             _order3.parcelSender,
@@ -218,6 +218,7 @@ contract Express {
             _order3.orderStatus
         );
     }
+
 
 
     //cancel order
@@ -253,6 +254,14 @@ contract Express {
     function takeOrder(uint256 _orderId, uint256 _currentTime) public {
         Order2 memory _order2 = orders2[_orderId];
         Order3 memory _order3 = orders3[_orderId];
+         require(
+            msg.sender != _order3.parcelSender,
+            "Cannot be taken by him/herself"
+        );
+         require(
+            msg.sender != _order3.receiver,
+            "Cannot be taken by receiver"
+        );
         require(
             _orderId > 0 && _orderId <= totalNumber,
             "Order should be ready to be taken!"
