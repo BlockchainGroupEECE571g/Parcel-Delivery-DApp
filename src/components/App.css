@@ -174,7 +174,7 @@ img.logoimg5 {
     margin-bottom: 30px;
 }
 
-button:hover {
+.submitButton:hover {
     background: #CF7A7A
 }
 
@@ -229,10 +229,43 @@ button:hover {
 
 .dialog-footer {
     margin-top: 20px;
+    text-align: center;
+}
+
+.dialog-content {
+    display: flex;
+    border-bottom: 1px solid rgb(87, 86, 86);
+}
+
+.dialog-content span {
+    font-weight: bold;
+}
+
+.dialog-content2 {
+    border-bottom: 1px solid rgb(87, 86, 86);
+}
+
+.dialog-content2 span {
+    font-weight: bold;
+}
+
+.dialog-body .buttondiv {
+    text-align: center;
+    margin-right: 23px;
+}
+
+.dialog-body .gradeButton {
+    background: rgb(29, 116, 151);
+    border: none;
+    padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
 }
 
 .dialog-footer button {
-    margin: 0 220px;
     background: rgb(11, 21, 36);
     border: none;
     padding: 4px 12px 4px 12px;
@@ -288,6 +321,28 @@ td .deliverButton {
     background: rgb(123, 101, 202);
     border: none;
     padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+td .confirmButton {
+    background: rgb(94, 145, 28);
+    border: none;
+    padding: 4px 12px 4px 12px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+td .makeButton {
+    background: rgb(29, 116, 151);
+    border: none;
+    padding: 2px 6px 2px 6px;
     color: #FFF;
     box-shadow: 1px 1px 5px #B6B6B6;
     border-radius: 3px;

@@ -174,7 +174,7 @@ class Courier extends Component {
               {' '}
               {this.state.orders.map((order, key) => {
                 return order.orderStatus == '101' &&
-                  order.parcelSender != this.state.account ? (
+                  order.parcelSender != this.state.account && order.receiver != this.state.account? (
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
                     <th scope="row"> {order.pickupAddr} </th>{' '}
@@ -204,6 +204,7 @@ class Courier extends Component {
               <tr>
                 <th scope="col"> #OrderId </th>{' '}
                 <th scope="col"> Order Status </th>{' '}
+                <th scope="col"> Deliver Order </th>{' '}
               </tr>{' '}
             </thead>{' '}
             <tbody id="orderList">

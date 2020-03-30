@@ -3,6 +3,7 @@ import Addressbar from './Addressbar'
 import Express from '../abis/Express'
 import Web3 from 'web3'
 import Dialog from "./Dialog"
+import Grade from "./Grade"
 import './App.css'
 import logo from '../images/logo.png'
 import receiverImg from '../images/receiver.jpg'
@@ -21,7 +22,9 @@ class Receiver extends Component {
     },
     loading2: false,
     dialog: false,
-    message: []
+    message: [],
+    canGrade:false,
+    gradeId:'',
   }
  
   async componentDidMount() {
@@ -118,13 +121,21 @@ class Receiver extends Component {
     })
  
   }
+
+  showGrade = async (_orderId) =>{
+       this.setState({ canGrade: true })
+       this.setState({ gradeId: _orderId })
+   }
  
   //close the dialog
   closeDialog = () => {
-    this.setState({
-      dialog: false
-    })
+    this.setState({dialog: false})
   }
+
+  closeGrade = () => {
+	     this.setState({ canGrade: false })
+   }
+  
   Home = () => {
     this.props.history.push({ pathname: '/' })
   }
@@ -133,6 +144,7 @@ class Receiver extends Component {
       <div>
         <Addressbar account={this.state.account} />{' '}
         {this.state.dialog&&<Dialog message={this.state.message} closeDialog={this.closeDialog}/>}
+        {this.state.canGrade&&<Grade gradeId={this.state.gradeId} makeGrade={this.makeGrade} closeGrade={this.closeGrade}/>}
         <div className="container-fluid mt-5">
         <div className="mybody">
         <div className="title">
@@ -152,39 +164,38 @@ class Receiver extends Component {
             <thead id="orderList">
               <tr>
                 <th scope="col"> #OrderId </th>{' '}
-                <th scope="col"> ParcelSender Name </th>{' '}
-                <th scope="col"> Courier Address </th>{' '}
+                <th scope="col"> Sender Name </th>{' '}
+                <th scope="col"> Sender Address </th>{' '}
                 <th scope="col"> Item Type </th>{' '}
-                <th scope="col"> Delivery Confirm </th>{' '}
-                <th scope="col"> Grade Courier</th>{' '}
+                <th scope="col"> Order Status</th>{' '}
+                <th scope="col"> Confirm Order</th>{' '}
               </tr>{' '}
             </thead>{' '}
             <tbody id="orderList">
               {' '}
               {this.state.orders.map((order, key) => {
-                return order.orderStatus == '103' &&order.receiver == this.state.account? (
+                return order.receiver == this.state.account? (
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
-                    <th scope="row"> {order.senderName} </th>{' '}
-                    <th scope="row"> {order.courier} </th>{' '}
-                    <th scope="row"> {order.orderType} </th>{' '}
+                    <td scope="row"> {order.senderName} </td>{' '}
+                    <td scope="row"> {order.pickupAddr} </td>{' '}
+                    <td scope="row"> {order.orderType} </td>{' '}
+                    <td scope="row"> {order.orderStatus} </td>{' '}
                     <td>
-                      <button
-                        name={order.orderId}
-                        onClick={this.confirmOrder}
-                      >
-                        Confirm Order{' '}
-                      </button>{' '}
-                    </td>{' '}
-                    <td>
-                      <button
-                        name={order.orderId}
-                        orderPrice = {order.orderPrice}
-                        onClick={this.makeGrade}
-                      >
-                        Grade{' '}
-                      </button>{' '}
-                    </td>{' '}
+                        {' '}
+                        {order.orderStatus == '103' ? (
+                          <button
+                            name={order.orderId}
+                            className="confirmButton"
+                            onClick={async event => {
+                              await this.confirmOrder(event.target.name)
+                            }}
+                          >
+                          Confirm Order{' '}
+                          </button>
+                        ) : (<span>Confirmed</span>)}{' '}
+                      </td>{' '}
+              
                   </tr>
                 ) : null
               })}{' '}
@@ -197,6 +208,7 @@ class Receiver extends Component {
               <tr>
                 <th scope="col"> #OrderId </th>{' '}
                 <th scope="col"> Order Status </th>{' '}
+                <th scope="col"> Grade Courier </th>{' '}
               </tr>{' '}
             </thead>{' '}
             <tbody id="orderList">
@@ -205,16 +217,28 @@ class Receiver extends Component {
                 return order.orderStatus == '104' && order.receiver == this.state.account ? (
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
-                    <th scope="row">
+                    <td scope="row">
                       {' '}
                       {this.state.statusMap[order.orderStatus]}{' '}
-                    </th>{' '}
+                    </td>{' '}
+                    <td>
+                        {' '}
+                        {order.orderStatus == '104' ? (
+                          <button
+                            className="makeButton"
+                            onClick={async event => {
+                              await this.showGrade(order.orderId)
+                            }}
+                          >
+                          Grade{' '}
+                          </button>
+                        ) : null}{' '}
+                      </td>{' '}
                     <td>
                       {' '}
                         <button
                         className="showInfoButton"
-                          onClick={async event => {
-                            
+                          onClick={async event => {                         
                             await this.showInfo(order.senderName,order.senderPhone,order.pickupAddr,order.receiverName,order.receiverPhone,order.shippingAddr,order.receiver,order.startTime,order.endTime,order.orderWeight,order.orderType)
                           }}
                         >
