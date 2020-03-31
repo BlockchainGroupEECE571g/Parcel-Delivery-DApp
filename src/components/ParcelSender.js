@@ -23,6 +23,7 @@ class ParcelSender extends Component {
       103: 'Delivered, waiting a confirmation',
       104: 'Completed',
       105: 'Cancelled',
+      106: 'Completed and Graded'
     },
     loading2: false,
     dialog: false,
@@ -125,6 +126,7 @@ class ParcelSender extends Component {
       .once('receipt', receipt => {
         this.setState({ loading: false })
       })
+      
   }
 
   //open the dialog
@@ -182,6 +184,7 @@ class ParcelSender extends Component {
       .once('receipt', receipt => {
         this.setState({ loading: false })
       })
+     
   }
   Home = () => {
     this.props.history.push({ pathname: '/' })
@@ -486,7 +489,8 @@ class ParcelSender extends Component {
                             name={order.orderId}
                             className="cancelButton"
                             onClick={async event => {
-                              await this.cancelOrder(event.target.name)
+                              await this.cancelOrder(event.target.name);
+                              await window.location.reload();
                             }}
                           >
                             Cancel Order{' '}

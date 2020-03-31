@@ -342,7 +342,7 @@ td .confirmButton {
 td .makeButton {
     background: rgb(29, 116, 151);
     border: none;
-    padding: 2px 6px 2px 6px;
+    padding: 4px 8px 4px 8px;
     color: #FFF;
     box-shadow: 1px 1px 5px #B6B6B6;
     border-radius: 3px;

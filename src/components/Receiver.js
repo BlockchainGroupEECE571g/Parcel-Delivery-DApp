@@ -19,8 +19,8 @@ class Receiver extends Component {
       103: 'Delivered, waiting a confirmation',
       104: 'Completed',
       105: 'Cancelled',
-    },
-    loading2: false,
+      106: 'Completed and Graded'
+    },   
     dialog: false,
     message: [],
     canGrade:false,
@@ -111,13 +111,8 @@ class Receiver extends Component {
   //open the dialog
   showInfo = async (senderName, senderPhone, pickupAddr, receiverName, receiverPhone, shippingAddr, receiver, startTime, endTime, orderWeight, orderType) => {
     this.setState({
-      loading2: true
-    })
- 
-    this.setState({
       dialog: true,
       message: [senderName, senderPhone, pickupAddr, receiverName, receiverPhone, shippingAddr, receiver, startTime, endTime, orderWeight, orderType],
-      loading2: false
     })
  
   }
@@ -180,7 +175,7 @@ class Receiver extends Component {
                     <td scope="row"> {order.senderName} </td>{' '}
                     <td scope="row"> {order.pickupAddr} </td>{' '}
                     <td scope="row"> {order.orderType} </td>{' '}
-                    <td scope="row"> {order.orderStatus} </td>{' '}
+                    <td scope="row"> {this.state.statusMap[order.orderStatus]} </td>{' '}
                     <td>
                         {' '}
                         {order.orderStatus == '103' ? (
@@ -193,7 +188,7 @@ class Receiver extends Component {
                           >
                           Confirm Order{' '}
                           </button>
-                        ) : (<span>Confirmed</span>)}{' '}
+                        ) : null}{' '}
                       </td>{' '}
               
                   </tr>
@@ -208,16 +203,17 @@ class Receiver extends Component {
               <tr>
                 <th scope="col"> #OrderId </th>{' '}
                 <th scope="col"> Order Status </th>{' '}
-                <th scope="col"> Grade Courier </th>{' '}
+                <th scope="col"> Make Grade </th>{' '}
+                <th scope="col"> Grade </th>{' '}
               </tr>{' '}
             </thead>{' '}
             <tbody id="orderList">
               {' '}
               {this.state.orders.map((order, key) => {
-                return order.orderStatus == '104' && order.receiver == this.state.account ? (
+                return order.orderStatus == '104' ||order.orderStatus == '106' && order.receiver == this.state.account ? (
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
-                    <td scope="row">
+                    <td>
                       {' '}
                       {this.state.statusMap[order.orderStatus]}{' '}
                     </td>{' '}
@@ -232,6 +228,12 @@ class Receiver extends Component {
                           >
                           Grade{' '}
                           </button>
+                        ) : null}{' '}
+                      </td>{' '}
+                      <td>
+                        {' '}
+                        {order.orderStatus == '106' ? (
+                          <p>{order.orderGrade.toString()}</p>
                         ) : null}{' '}
                       </td>{' '}
                     <td>

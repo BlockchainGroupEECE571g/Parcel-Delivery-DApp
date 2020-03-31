@@ -12,13 +12,14 @@ class Courier extends Component {
   state = {
     account: '',
     orders: [],
-    currentCourier: '',
+    currentCourier: [],
     statusMap: {
       101: 'Waiting to be taken',
       102: 'Waiting for delivery',
       103: 'Delivered, waiting a confirmation',
       104: 'Completed',
       105: 'Cancelled',
+      106: 'Completed and Graded'
     },
     loading2: false,
     dialog: false,
@@ -67,6 +68,7 @@ class Courier extends Component {
         })
       }
       console.log('myOrders', this.state.orders)
+     
       const currentCourier = await deployedExpress.methods.couriers(accounts[0]).call();
       this.setState({
         currentCourier: currentCourier
@@ -213,10 +215,10 @@ class Courier extends Component {
                 return order.courier == this.state.account ? (
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
-                    <th scope="row">
+                    <td scope="row">
                       {' '}
                       {this.state.statusMap[order.orderStatus]}{' '}
-                    </th>{' '}
+                    </td>{' '}
                     <td>
                       {' '}
                       {order.orderStatus == '102' ? (

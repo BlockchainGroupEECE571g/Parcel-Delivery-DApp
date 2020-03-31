@@ -10,8 +10,8 @@ class Grade extends Component {
         onSubmit={async event => {
                 event.preventDefault()
                 const grade = this.grade.value;
-                const gradeId=this.props.gradeId;
-                console.log(grade+gradeId)
+                const gradeId = this.props.gradeId;
+                console.log(grade + gradeId)
                 await this.props.makeGrade(gradeId,grade)
                 
               }}

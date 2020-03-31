@@ -11,6 +11,7 @@ contract Express {
     uint256 public constant status3 = 103; //Delivered waiting confirmation
     uint256 public constant status4 = 104; //Complete
     uint256 public constant status5 = 105; //Cancelled
+    uint256 public constant status6 = 106; //Graded
     uint256 public constant parcelNumPerHour = 2;
     struct Order1 {
         uint256 orderId;
@@ -37,12 +38,13 @@ contract Express {
         address payable courier;
         address receiver;
         uint256 orderStatus;
+        uint256 orderGrade;
     }
 
     struct Courier {
         uint256 courierGrade;
         uint256[] courierOrders;
-        uint256 curOrdersNum; //
+        uint256 curOrdersNum;
         uint256 totalGradesNum;
     }
 
@@ -352,17 +354,25 @@ contract Express {
        _order3.courier.transfer(_order2.orderPrice);
     }
 
-    function makeGrade(uint256 _orderId, uint256 _grade) public view {
+    function makeGrade(uint256 _orderId, uint256 _grade) public{
         Order3 memory _order3 = orders3[_orderId];
         require(
             _order3.receiver == msg.sender,
-            "Only receiver can confirm order"
+            "Only receiver can make grade"
+        );
+        require(
+            _order3.orderStatus == 104,
+            "Only completed status can be graded"
         );
         Courier memory _courier = couriers[_order3.courier];
         _courier.totalGradesNum++;
         //?cannot support float type
         _courier.courierGrade = (_grade + _courier.courierGrade * (_courier.totalGradesNum - 1)) /
             (_courier.totalGradesNum);
+        couriers[_order3.courier] = _courier;
+        _order3.orderStatus = status6;
+        _order3.orderGrade = _grade;
+        orders3[_orderId] = _order3;
 
     }
 
