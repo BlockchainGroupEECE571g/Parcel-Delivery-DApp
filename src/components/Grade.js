@@ -12,7 +12,7 @@ class Grade extends Component {
                 const grade = this.grade.value;
                 const gradeId = this.props.gradeId;
                 console.log(grade + gradeId)
-                await this.props.makeGrade(gradeId,grade)
+                await this.props.makeGrade(gradeId,grade);
                 
               }}
             >

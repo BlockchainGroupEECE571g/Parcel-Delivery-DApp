@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
 const Dialog = props => {
   const { message, closeDialog } = props
+  let weight = "";
+  if(message[9]==1){
+    weight = "0 - 10 KG";
+  }
+  if(message[9]==11){
+    weight = "10 - 20 KG";
+  }
+  if(message[9]==21){
+    weight = "20 - 30 KG";
+  }
   return (
       <div className="dialog-container">
         <div className="dialog-header"> </div>{' '}
@@ -14,7 +24,7 @@ const Dialog = props => {
           <div className="dialog-content2"> <span>Receiver Hash Address:  &nbsp; &nbsp;</span> {message[6]}</div>{' '}
           <div className="dialog-content"> <span>Pickup Time:  &nbsp; &nbsp;</span> {message[7]+": 00"}</div>{' '}
           <div className="dialog-content"> <span>Expected Delivery Time:&nbsp; &nbsp;</span> {message[8]+": 00"}</div>{' '}
-          <div className="dialog-content"> <span>Item Weight: &nbsp; &nbsp;</span> {message[9]+" KG"}</div>{' '}
+          <div className="dialog-content"> <span>Item Weight: &nbsp; &nbsp;</span> {weight}</div>{' '}
           <div className="dialog-content"> <span>Item Type:&nbsp; &nbsp;</span> {message[10]}</div>{' '}
         </div>{' '}
         <div className="dialog-footer">

@@ -90,7 +90,8 @@ class Receiver extends Component {
       .confirmOrder(_orderId)
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
-        this.setState({ loading: false })
+        this.setState({ loading: false });
+        window.location.reload();
       })
   }
  
@@ -103,7 +104,9 @@ class Receiver extends Component {
       .makeGrade(_orderId, _grade)
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
-        this.setState({ loading: false })
+        this.setState({ loading: false });
+        this.setState({canGrade:false})
+        window.location.reload();
       })
   }
  
@@ -169,7 +172,7 @@ class Receiver extends Component {
             <tbody id="orderList">
               {' '}
               {this.state.orders.map((order, key) => {
-                return order.receiver == this.state.account? (
+                return order.receiver == this.state.account&&order.orderStatus!=105? (
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
                     <td scope="row"> {order.senderName} </td>{' '}

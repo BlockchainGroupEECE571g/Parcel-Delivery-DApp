@@ -125,9 +125,11 @@ class ParcelSender extends Component {
       .send({ from: this.state.account, value: _orderPrice, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
       
   }
+
 
   //open the dialog
   showInfo = async (
@@ -183,6 +185,7 @@ class ParcelSender extends Component {
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
      
   }
@@ -488,10 +491,10 @@ class ParcelSender extends Component {
                           <button
                             name={order.orderId}
                             className="cancelButton"
-                            onClick={async event => {
+                            onClick={async event =>{
                               await this.cancelOrder(event.target.name);
-                              await window.location.reload();
                             }}
+                            
                           >
                             Cancel Order{' '}
                           </button>
