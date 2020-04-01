@@ -228,7 +228,7 @@ img.logoimg5 {
 }
 
 .dialog-footer {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: center;
 }
 
@@ -343,6 +343,18 @@ td .makeButton {
     background: rgb(29, 116, 151);
     border: none;
     padding: 4px 8px 4px 8px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+
+td .showCourierButton {
+    background: rgb(29, 116, 151);
+    border: none;
+    width: 18px;
+    height: 18px;
     color: #FFF;
     box-shadow: 1px 1px 5px #B6B6B6;
     border-radius: 3px;

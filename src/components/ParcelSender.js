@@ -6,6 +6,7 @@ import './App.css'
 import logo from '../images/logo.png'
 import Dialog from './Dialog'
 import parcelSenderImg from '../images/parcelSender.jpg'
+import ShowCourier from './ShowCourier'
 
 class ParcelSender extends Component {
   state = {
@@ -25,9 +26,9 @@ class ParcelSender extends Component {
       105: 'Cancelled',
       106: 'Completed and Graded'
     },
-    loading2: false,
     dialog: false,
     message: [],
+    canShow: false,
   }
 
   async componentDidMount() {
@@ -77,6 +78,21 @@ class ParcelSender extends Component {
       window.alert('Express contract is not found in your blockchain.')
     }
   }
+
+  showCourier = async (_orderId) =>{
+    const myOrder3 = await this.state.deployedExpress.methods.orders3(_orderId).call()
+    const myCourier = await this.state.deployedExpress.methods.couriers(myOrder3.courier).call();
+      this.setState({
+        myCourier: myCourier
+      })
+      console.log("myCourier",myCourier)
+    this.setState({ canShowCourier: true })
+}
+
+closeCourier = () => {
+  this.setState({ canShowCourier: false })
+}
+
 
   createOrder = async (
     _senderName,
@@ -146,10 +162,6 @@ class ParcelSender extends Component {
     orderType,
   ) => {
     this.setState({
-      loading2: true,
-    })
-
-    this.setState({
       dialog: true,
       message: [
         senderName,
@@ -164,7 +176,6 @@ class ParcelSender extends Component {
         orderWeight,
         orderType,
       ],
-      loading2: false,
     })
   }
 
@@ -198,6 +209,7 @@ class ParcelSender extends Component {
     return (
       <div>
         <Addressbar account={this.state.account} />{' '}
+        {this.state.canShowCourier&&<ShowCourier myCourier={this.state.myCourier} closeCourier={this.closeCourier}/>}
         <div className="container-fluid mt-5">
           <div className="mybody">
             <div className="title">
@@ -520,7 +532,15 @@ class ParcelSender extends Component {
                         )}
                         ETH{' '}
                       </td>{' '}
-                      <td> {order.courier} </td>{' '}
+                      <td> {order.courier} {order.orderStatus != '101'&&order.orderStatus != '105' ? (
+                        <button
+                          name={order.orderId}
+                          className="showCourierButton"
+                          onClick={async event =>{
+                            await this.showCourier(event.target.name);       
+                          }}                       
+                        >
+                        </button>) : null}</td>{' '}
                       <td> {this.state.statusMap[order.orderStatus]} </td>{' '}
                       <td>
                         {' '}
@@ -529,11 +549,7 @@ class ParcelSender extends Component {
                             name={order.orderId}
                             className="cancelButton"
                             onClick={async event =>{
-                              await this.cancelOrder(event.target.name);
-<<<<<<< HEAD
-                            
-=======
->>>>>>> 6cc5dd1628c7dfca2f8a575c8e2ba4b7828f5dad
+                              await this.cancelOrder(event.target.name);       
                             }}
                             
                           >

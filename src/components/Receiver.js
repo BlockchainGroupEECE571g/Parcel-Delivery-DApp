@@ -90,11 +90,7 @@ class Receiver extends Component {
       .confirmOrder(_orderId)
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
-<<<<<<< HEAD
-        this.setState({ loading: false })
-=======
         this.setState({ loading: false });
->>>>>>> 6cc5dd1628c7dfca2f8a575c8e2ba4b7828f5dad
         window.location.reload();
       })
   }
@@ -108,12 +104,8 @@ class Receiver extends Component {
       .makeGrade(_orderId, _grade)
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
-<<<<<<< HEAD
-        this.setState({ loading: false })
-=======
         this.setState({ loading: false });
         this.setState({canGrade:false})
->>>>>>> 6cc5dd1628c7dfca2f8a575c8e2ba4b7828f5dad
         window.location.reload();
       })
   }
@@ -180,11 +172,7 @@ class Receiver extends Component {
             <tbody id="orderList">
               {' '}
               {this.state.orders.map((order, key) => {
-<<<<<<< HEAD
                 return order.receiver == this.state.account && order.orderStatus!=104 &&order.orderStatus!=105 && order.orderStatus!=106? (
-=======
-                return order.receiver == this.state.account&&order.orderStatus!=105? (
->>>>>>> 6cc5dd1628c7dfca2f8a575c8e2ba4b7828f5dad
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
                     <td scope="row"> {order.senderName} </td>{' '}
