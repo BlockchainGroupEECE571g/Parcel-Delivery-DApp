@@ -125,6 +125,7 @@ class ParcelSender extends Component {
       .send({ from: this.state.account, value: _orderPrice, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
       
   }
@@ -183,8 +184,10 @@ class ParcelSender extends Component {
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
-     
+
+        
   }
   Home = () => {
     this.props.history.push({ pathname: '/' })
@@ -227,20 +230,55 @@ class ParcelSender extends Component {
                   this.state.orderPrice.toString(),
                   'Ether',
                 )
-                await this.createOrder(
-                  senderName,
-                  senderPhone,
-                  pickupAddr,
-                  shippingAddr,
-                  receiverName,
-                  receiverPhone,
-                  receiverAddr,
-                  startTime,
-                  endTime,
-                  orderWeight,
-                  orderType,
-                  orderPrice,
-                )
+                let correct = true;
+                if(!((/^([\u4e00-\u9fa5]{2,20}|[a-zA-Z.\s]{2,20})$/.test(senderName)))) {
+                  alert('please input correct senderName');
+                  correct = false;
+                }else if(!(/^\d{10}$/.test(senderPhone))) {
+                  alert('please input correct senderPhone');
+                  correct = false;
+                }else if(pickupAddr==null || pickupAddr.length==0) {
+                  alert('please input correct pickupAddr');
+                  correct = false;
+                }else if(shippingAddr==null || shippingAddr.length==0) {
+                  alert('please input correct shippingAddr');
+                  correct = false;
+                }else if(!(/^([\u4e00-\u9fa5]{2,20}|[a-zA-Z.\s]{2,20})$/.test(receiverName))) {
+                  alert('please input correct receiverName');
+                  correct = false;
+                }else if(!(/^\d{10}$/.test(receiverPhone))) {
+                  alert('please input correct receiverPhone');
+                  correct = false;
+                }else if(!(/^0x[A-Za-z0-9]{40}$/.test(receiverAddr))) {
+                  alert('please input correct receiverAddr');
+                  correct = false;
+                }else if(parseInt(startTime)>=parseInt(endTime)) {
+                  alert('please input correct time');
+                  correct = false;
+                }else if(orderWeight==0) {
+                  alert('please choose the order weight');
+                  correct = false;
+                }else if(orderType==0) {
+                  alert('please choose the order type');
+                  correct = false;
+                }
+
+                if(correct==true){
+                  await this.createOrder(
+                    senderName,
+                    senderPhone,
+                    pickupAddr,
+                    shippingAddr,
+                    receiverName,
+                    receiverPhone,
+                    receiverAddr,
+                    startTime,
+                    endTime,
+                    orderWeight,
+                    orderType,
+                    orderPrice,
+                  )                  
+                }
               }}
             >
               <div className="inputdiv">
@@ -254,6 +292,7 @@ class ParcelSender extends Component {
                   className="form-control"
                   placeholder=""
                   required
+                  
                 />
 
                 <span> Your Phone Number: </span>
@@ -490,7 +529,7 @@ class ParcelSender extends Component {
                             className="cancelButton"
                             onClick={async event => {
                               await this.cancelOrder(event.target.name);
-                              await window.location.reload();
+                            
                             }}
                           >
                             Cancel Order{' '}

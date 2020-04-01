@@ -11,8 +11,15 @@ class Grade extends Component {
                 event.preventDefault()
                 const grade = this.grade.value;
                 const gradeId = this.props.gradeId;
-                console.log(grade + gradeId)
-                await this.props.makeGrade(gradeId,grade)
+                let correct = true;
+                if(grade%1!=0 || grade<0 || grade>100) {
+                  alert('please input integer grade between 0-100');
+                  correct = false;
+                }
+                if(correct){
+                  await this.props.makeGrade(gradeId,grade)
+                }
+                
                 
               }}
             >

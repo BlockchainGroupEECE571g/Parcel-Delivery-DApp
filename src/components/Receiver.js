@@ -91,6 +91,7 @@ class Receiver extends Component {
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
   }
  
@@ -104,6 +105,7 @@ class Receiver extends Component {
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
   }
  
@@ -169,7 +171,7 @@ class Receiver extends Component {
             <tbody id="orderList">
               {' '}
               {this.state.orders.map((order, key) => {
-                return order.receiver == this.state.account? (
+                return order.receiver == this.state.account && order.orderStatus!=104 &&order.orderStatus!=105 && order.orderStatus!=106? (
                   <tr key={key}>
                     <th scope="row"> {order.orderId.toString()} </th>{' '}
                     <td scope="row"> {order.senderName} </td>{' '}

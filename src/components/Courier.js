@@ -89,6 +89,7 @@ class Courier extends Component {
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
   }
   deliverOrder = async (_orderId, _currentTime) => {
@@ -101,6 +102,7 @@ class Courier extends Component {
       .send({ from: this.state.account, gas: gasAmount })
       .once('receipt', receipt => {
         this.setState({ loading: false })
+        window.location.reload();
       })
   }
  
