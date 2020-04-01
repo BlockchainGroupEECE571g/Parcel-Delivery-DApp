@@ -130,6 +130,7 @@ class ParcelSender extends Component {
       
   }
 
+
   //open the dialog
   showInfo = async (
     senderName,
@@ -527,10 +528,14 @@ class ParcelSender extends Component {
                           <button
                             name={order.orderId}
                             className="cancelButton"
-                            onClick={async event => {
+                            onClick={async event =>{
                               await this.cancelOrder(event.target.name);
+<<<<<<< HEAD
                             
+=======
+>>>>>>> 6cc5dd1628c7dfca2f8a575c8e2ba4b7828f5dad
                             }}
+                            
                           >
                             Cancel Order{' '}
                           </button>
