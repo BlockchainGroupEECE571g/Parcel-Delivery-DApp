@@ -151,7 +151,7 @@ contract Express {
         );
         require(bytes(_receiverName).length > 0, "receiverName is required!");
         require(
-            _receiverPhone > 1000000000 && _receiverPhone < 1999999999,
+            _receiverPhone > 1000000000 && _receiverPhone < 9999999999,
             "Please input correct phone number!"
         );
         require(
